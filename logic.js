@@ -10,8 +10,14 @@ $(document).ready(function ()
 	var count=0;
 	var  numOfQues=0;
 	showScore();
+	
+    $("#startButton").on("click", function () {
+      
 	$.getJSON('questions.json', function(data) 
 	{
+		score=0;
+		qno=0;
+		count=0;
 		numOfQues=data.quizlist.length;
 
 		for(i=0; i<data.quizlist.length; i++)
@@ -22,9 +28,12 @@ $(document).ready(function ()
 			questions[i][2] = data.quizlist[i].option2;
 			questions[i][3] = data.quizlist[i].option3;
 		}
-		totalQuestions = questions.length;		
+		totalQuestions = questions.length;
+	
 		showQuestions();
-	})
+	});
+ });
+	
 	function showScore()
 	{
 		$("#temp").remove();
@@ -78,25 +87,27 @@ $(document).ready(function ()
 		$('.option').click(function()
 		{
 			count=count+1;
-			if(count==numOfQues)    // when there are no questions left
-			{
-				document.getElementById("yourScore").innerHTML="Your Score:"+score;
-				window.location="#endPage";
-			}
+			
 			if(questionLock==false)
 			{
 				questionLock=true;
-					
+				
 				//correct answer
 				if(this.id==correctOpt)
 				{
 					$(stage).append('<div class="Correct">CORRECT</div>');
 					score=score+10;
 				}
+					
 				//wrong answer 
 				if(this.id!=correctOpt)
 				{
 					$(stage).append('<div class="Wrong">WRONG</div>');
+				}
+				if(count ==numOfQues)    // when there are no questions left
+				{
+				document.getElementById("yourScore").innerHTML="Your Score:"+score;
+				window.location="#endPage";
 				}
 				setTimeout(function(){changeQuestion()},1000); //waits for 1 second and loads next question
 			}
